@@ -41,7 +41,7 @@ func hasAdjacement(schematic []string, row string, i, j int) bool {
 	return false
 }
 
-func isNexInt(s string, index int) bool {
+func isNextInt(s string, index int) bool {
 	if index == len(s)-1 {
 		return false
 	}
@@ -68,7 +68,7 @@ func getSum(input string) (numSum int) {
 
 			}
 
-            if isNexInt(row, j) {
+            if isNextInt(row, j) {
                 continue
             }
 
