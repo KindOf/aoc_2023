@@ -88,25 +88,35 @@ func getPick(card string) (nums []int) {
 	return
 }
 
-func evaluateResults(matchLength int) int  {
-    if matchLength == 0 {
-        return 0
-    }
-    res := 1
+func getCardId(card string) string {
+	return strings.Split(strings.TrimSpace(card), ":")[0]
+}
 
-    for i := 0; i < matchLength -1; i++ {
-        res *= 2
-    }
+func evaluateResults(matchLength int) int {
+	if matchLength == 0 {
+		return 0
+	}
+	res := 1
 
-    return res
+	for i := 0; i < matchLength-1; i++ {
+		res *= 2
+	}
+
+	return res
+}
+
+func findWinningLength(card string) int {
+	winning := getWinningNumbers(card)
+	pick := getPick(card)
+	match := utils.IntersectionInts(winning, pick)
+
+	return len(match)
 }
 
 func EvaluateCard(card string) int {
-	winning := getWinningNumbers(card)
-	pick := getPick(card)
-    match := utils.IntersectionInts(winning, pick)
+	winningLength := findWinningLength(card)
 
-	return evaluateResults(len(match))
+	return evaluateResults(winningLength)
 }
 
 func CalculatePoints(inputCards string) (sum int) {
@@ -116,6 +126,36 @@ func CalculatePoints(inputCards string) (sum int) {
 	return
 }
 
+func calculateCards(inputCards string) (sum int) {
+	cards := splitCards(inputCards)
+
+	cardNums := make([]int, len(cards))
+
+    for a := range cardNums {
+        cardNums[a] = 1
+    }
+
+	for i, card := range cards {
+		for j := 0; j < cardNums[i]; j++ {
+			wins := findWinningLength(card)
+
+            for k := 0; k < wins; k++ {
+                cardNums[i + 1 + k]++
+            }
+		}
+
+		sum += cardNums[i]
+	}
+
+	fmt.Println("CardsNums:", cardNums)
+
+	return
+}
+
+func PrintCardNum() {
+    fmt.Println("Result", calculateCards(input))
+}
+
 func PrintPoints() {
-    fmt.Println("Result:", CalculatePoints(input))
+	fmt.Println("Result:", CalculatePoints(input))
 }
